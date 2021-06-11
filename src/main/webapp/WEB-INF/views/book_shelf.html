@@ -25,7 +25,7 @@
         }
 
         th, td {
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #e56108;
         }
     </style>
 </head>
@@ -78,27 +78,41 @@
         </table>
     </form>
 
+    <form method="post" th:action="@{/books/filter}">
+        <table>
+            <tr>
+                <td>
+                    <input type="text" placeholder="author" th:name="bookAuthorToFilter">
+                    <input type="text" placeholder="title" th:name="bookTitleToFilter">
+                    <input type="text" placeholder="size" th:name="bookSizeToFilter">
+                </td>
+                <td>
+                    <input type="submit" value="filter">
+                </td>
+            </tr>
+        </table>
+    </form>
 
     <table id="books">
-        <tr>
-            <th>
-                <a th:href="@{'/books/sort/id?sort_field=decs'}">Id</a>
-            </th>
-            <th>
-                <a th:href="@{'/books/sort/author?sort_field=decs'}">author</a>
-            </th>
-            <th>
-                <a th:href="@{'/books/sort/title?sort_field=decs'}">title</a>
-            </th>
-            <th>
-                <a th:href="@{'/books/sort/pages?sort_field=decs'}">pages</a>
-            </th>
         <!--<tr>
-            <th>id</th>
-            <th>author</th>
-            <th>title</th>
-            <th>pages</th>
-        </tr>-->
+            <th>
+                <a th:href="@{'/books/filter/id?sort_field=decs'}">Id</a>
+            </th>
+            <th>
+                <a th:href="@{'/books/filter/author?sort_field=decs'}">author</a>
+            </th>
+            <th>
+                <a th:href="@{'/books/filter/title?sort_field=decs'}">title</a>
+            </th>
+            <th>
+                <a th:href="@{'/books/filter/pages?sort_field=decs'}">pages</a>
+            </th>
+        <tr>-->
+        <th>id</th>
+        <th>author</th>
+        <th>title</th>
+        <th>pages</th>
+        </tr>
         </tr>
         <tr th:each="book : ${bookList}">
             <td th:text="${book.id}"></td>
