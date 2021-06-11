@@ -1,22 +1,28 @@
 package org.example.app.repositories;
 
 import org.apache.log4j.Logger;
+import org.example.app.services.IdProvider;
 import org.example.web.dto.Book;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
 @Repository
-public class BookRepositoryImpl implements BookRepository<Book> {
+public class BookRepositoryImpl implements BookRepository<Book>, ApplicationContextAware {
 
     private final Logger logger = Logger.getLogger(BookRepositoryImpl.class);
     private final List<Book> repo = new ArrayList<>();
     private final List<Book> filterBooks = new ArrayList<>();
+    private ApplicationContext context;
 
     {
         for (int i = 0; i < 5; i++) {
-            repo.add(new Book(i, "Author_" + i, "Title_" + i, 100 + i));
-            repo.add(new Book(i + 10, "Author_" + i, "Title_" + i, 100 + i));
+            repo.add(new Book(i + "", "Author_" + i, "Title_" + i, 100 + i));
+//            repo.add(new Book(i + 10, "Author_" + i, "Title_" + i, 100 + i));
         }
     }
 
@@ -31,14 +37,14 @@ public class BookRepositoryImpl implements BookRepository<Book> {
     @Override
     public void store(Book book) {
         if (!book.getAuthor().isEmpty() || !book.getTitle().isEmpty() || book.getSize() != null) {
-            book.setId(book.hashCode());
+            book.setId(context.getBean(IdProvider.class).providerId(book));
             logger.info("store new book: " + book);
             repo.add(book);
         }
     }
 
     @Override
-    public void removeItemById(Integer bookIdToRemove) {
+    public void removeItemById(String bookIdToRemove) {
         for (Book book : retrieveAll()) {
             if (book.getId().equals(bookIdToRemove)) {
                 logger.info("remove book completed: " + book);
@@ -82,5 +88,18 @@ public class BookRepositoryImpl implements BookRepository<Book> {
         }
 
         return filterBooks;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.context = applicationContext;
+    }
+
+    private void defaultInit() {
+        logger.info("default INIT in repository");
+    }
+
+    private void defaultDestroy() {
+        logger.info("default DESTROY in repository");
     }
 }

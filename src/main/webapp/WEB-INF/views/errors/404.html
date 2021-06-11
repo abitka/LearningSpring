@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>404 Not Found Page</title>
+</head>
+<body>
+<h1>Wrong user name or password</h1>
+<p th:text="${errorMessage}"></p>
+<a href="/learning_war_exploded/login/registration">Go create account</a>
+<p>
+<a href="/learning_war_exploded/login">Back to login page</a>
+</body>
+</html>

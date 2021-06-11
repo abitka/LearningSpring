@@ -1,26 +1,30 @@
 package org.example.web.dto;
 
+import javax.validation.constraints.Digits;
+
 public class Book {
-    private Integer id;
+    private String id;
     private String author;
     private String title;
+
+    @Digits(integer = 5, fraction = 0)
     private Integer size;
 
     public Book() {
     }
 
-    public Book(Integer id, String author, String title, Integer size) {
+    public Book(String id, String author, String title, Integer size) {
         this.id = id;
         this.author = author;
         this.title = title;
         this.size = size;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

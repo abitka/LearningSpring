@@ -8,7 +8,7 @@ public interface BookRepository<T> {
 
     void store(T object);
 
-    void removeItemById(Integer idToRemove);
+    void removeItemById(String idToRemove);
     void removeItems(String bookAuthorToRemove, String bookTitleToRemove, Integer bookSizeToRemove);
 
     List<T> filterBooks(String author, String title, Integer size);
