@@ -4,12 +4,17 @@ import org.apache.log4j.Logger;
 import org.example.app.services.BookService;
 import org.example.web.dto.Book;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Controller
-@RequestMapping(value = "books")
+@RequestMapping(value = "/books")
+@Scope("singleton")
 public class BookShelfController {
 
     private final Logger logger = Logger.getLogger(BookShelfController.class);
@@ -54,11 +59,21 @@ public class BookShelfController {
         return "redirect:/books/shelf";
     }
 
-    @GetMapping(value = "/sort/{param_id}")
-    public String sortBooks(@PathVariable(name = "param_id") String param) {
-        logger.info("sortBooks| param: " + param);
-        bookService.sortBooks(param);
+    @PostMapping(value = "/filter")
+    public String filterBooks(
+            @RequestParam(value = "bookAuthorToFilter") String bookAuthorToFilter,
+            @RequestParam(value = "bookTitleToFilter") String bookTitleToFilter,
+            @RequestParam(value = "bookSizeToFilter") Integer bookSizeToFilter, Model model) {
+        logger.info("filterBooks:\n " +
+                "bookAuthorToFilter: " + bookAuthorToFilter +
+                " | bookTitleToFilter: " + bookTitleToFilter +
+                " | bookSizeToFilter: " + bookSizeToFilter);
+        bookService.filterBooks(bookAuthorToFilter, bookTitleToFilter, bookSizeToFilter);
 
+        List<Book> filterBooks = bookService.filterBooks(bookAuthorToFilter, bookTitleToFilter, bookSizeToFilter);
+
+        model.addAttribute("bookList", filterBooks);
         return "redirect:/books/shelf";
+//        return "book_shelf";
     }
 }
