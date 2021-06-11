@@ -29,45 +29,40 @@ public class AccountController {
         return "login_page";
     }
 
-//    @GetMapping("/registration")
-//    public String reg(Model model) {
-//        model.addAttribute("accountForm", new AccountForm());
-//        logger.info("GET /registration returns registration_page.html");
-//        return "registration_page";
-//    }
-//
-//    @PostMapping("/registration")
-//    public String registration(Model model) {
-//        model.addAttribute("accountForm", new AccountForm());
-//        logger.info("POST /registration redirect:/registration");
-//        return "redirect:/login/registration";
-//    }
+    @GetMapping("/registration")
+    public String reg(Model model) {
+        model.addAttribute("accountForm", new AccountForm());
+        logger.info("GET /registration returns registration_page.html");
+        return "registration_page";
+    }
+
+    @PostMapping("/registration")
+    public String registration(Model model) {
+        model.addAttribute("accountForm", new AccountForm());
+        logger.info("POST /registration redirect:/registration");
+        return "redirect:/login/registration";
+    }
 
     @PostMapping("/auth")
     public String authenticate(AccountForm accountForm) {
-        logger.info("authenticate:" + accountForm.getUserName() + " | " + accountForm.getPassword());
         if (accountService.authenticate(accountForm)) {
             logger.info("login OK! redirect to book shelf");
             return "redirect:/books/shelf";
-        } else {
-            logger.info("login FAIL! redirect to registration");
-            return "redirect:/login/registration";
         }
-//        logger.info("login FAIL! redirect to registration");
-//        return "redirect:/login/registration";
+        logger.info("login FAIL! redirect to registration");
+        return "redirect:/login/registration";
     }
 
-//    @PostMapping("/registration/save")
-//    public String saveAccount(AccountForm account) {
-//        accountService.saveAccount(account);
-//        logger.info("account repository size: " + accountService.getAllAccount().size());
-//        return "redirect:/login";
-//    }
+    @PostMapping("/registration/save")
+    public String saveAccount(AccountForm account) {
+        accountService.saveAccount(account);
+        logger.info("account repository size: " + accountService.getAllAccount().size());
+        return "redirect:/login";
+    }
 
     @ExceptionHandler(BookShelfLoginException.class)
     public String handlerError(Model model, BookShelfLoginException exception) {
         model.addAttribute("errorMessage", exception.getMessage());
         return "errors/404";
     }
-
 }

@@ -20,16 +20,16 @@
         <form method="post" th:action="@{/login/auth}" th:object="${accountForm}">
             <img id="login_item" th:src="@{/images/book_icon.jpg}">
             <br>
-            <input class="login_item" type="text" placeholder="enter user name" th:field="*{userName}">
+            <input class="login_item" type="text" placeholder="enter user name" th:field="*{username}">
             <br>
             <input class="login_item" type="password" placeholder="enter password" th:field="*{password}">
             <br>
             <input class="login_item" type="submit" value="Login">
         </form>
 
-<!--        <form method="post" th:action="@{login/registration}">-->
-<!--            <input class="login_item" type="submit" value="Create new account">-->
-<!--        </form>-->
+        <form method="post" th:action="@{login/registration}">
+            <input class="login_item" type="submit" value="Create new account">
+        </form>
     </div>
 </body>
 </html>

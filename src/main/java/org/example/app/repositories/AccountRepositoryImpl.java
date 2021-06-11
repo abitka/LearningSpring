@@ -24,10 +24,10 @@ public class AccountRepositoryImpl implements AccountRepository<AccountForm> {
 
     @Override
     public void store(AccountForm accountForm) {
-        if (accountForm.getUserName().isEmpty() || accountForm.getPassword().isEmpty())
+        if (accountForm.getUsername().isEmpty() || accountForm.getPassword().isEmpty())
             return;
         for (AccountForm user : retrieveAll()) {
-            if (user.getUserName().equalsIgnoreCase(accountForm.getUserName())) {
+            if (user.getUsername().equalsIgnoreCase(accountForm.getUsername())) {
                 logger.info("Such user already registered!");
                 return;
             }
@@ -40,7 +40,7 @@ public class AccountRepositoryImpl implements AccountRepository<AccountForm> {
     public boolean authenticate(AccountForm accountForm) {
         logger.info("try auth with user-form: " + accountForm);
         for (AccountForm account : retrieveAll()) {
-            if (account.getUserName().equals(accountForm.getUserName()) &&
+            if (account.getUsername().equals(accountForm.getUsername()) &&
                     account.getPassword().equals(accountForm.getPassword()))
                 return true;
         }
