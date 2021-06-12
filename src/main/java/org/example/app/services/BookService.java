@@ -31,7 +31,7 @@ public class BookService {
         bookRepo.removeItems(bookAuthorToRemove, bookTitleToRemove, bookSizeToRemove);
     }
 
-    public void removeBookId(String bookIdToRemove) {
+    public void removeBookId(Integer bookIdToRemove) {
         bookRepo.removeItemById(bookIdToRemove);
     }
 

@@ -1,24 +1,24 @@
 package org.example.web.dto;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class BookIdToRemove {
 
-    @NotEmpty
-    private String id;
+    @NotNull
+    private Integer id;
 
     public BookIdToRemove() {
     }
 
-    public BookIdToRemove(String id) {
+    public BookIdToRemove(Integer id) {
         this.id = id;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 }

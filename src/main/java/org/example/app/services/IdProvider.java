@@ -1,7 +1,6 @@
 package org.example.app.services;
 
 import org.apache.log4j.Logger;
-import org.example.web.dto.Book;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -14,9 +13,9 @@ public class IdProvider implements InitializingBean, DisposableBean, BeanPostPro
 
     private final Logger logger = Logger.getLogger(IdProvider.class);
 
-    public String providerId(Book book) {
-        return this.hashCode() + "_" + book.hashCode();
-    }
+//    public Integer providerId(Book book) {
+//        return this.hashCode() + "_" + book.hashCode();
+//    }
 
     private void initIdProvider() {
         logger.info("provider INIT");

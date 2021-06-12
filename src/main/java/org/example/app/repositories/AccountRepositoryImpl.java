@@ -24,8 +24,6 @@ public class AccountRepositoryImpl implements AccountRepository<AccountForm> {
 
     @Override
     public void store(AccountForm accountForm) {
-        if (accountForm.getUsername().isEmpty() || accountForm.getPassword().isEmpty())
-            return;
         for (AccountForm user : retrieveAll()) {
             if (user.getUsername().equalsIgnoreCase(accountForm.getUsername())) {
                 logger.info("Such user already registered!");
