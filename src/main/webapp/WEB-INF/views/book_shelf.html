@@ -36,13 +36,15 @@
             <tr>
                 <td>
                     <input type="text" placeholder="author" th:field="*{author}">
+                    <p th:if="${#fields.hasErrors('author')}">Wrong field Author| min 1 ,max 5 length</p>
                 </td>
                 <td>
                     <input type="text" placeholder="book_title" th:field="*{title}">
+                    <p th:if="${#fields.hasErrors('title')}">Wrong filed Title| min 1, max 5 length</p>
                 </td>
                 <td>
                     <input type="text" placeholder="pages" th:field="*{size}">
-                    <p th:if="${#fields.hasErrors()}">Only integer value and max 5 length</p>
+                    <p th:if="${#fields.hasErrors('size')}">Only integer value and max 5 length</p>
                 </td>
                 <td>
                     <input type="submit" value="save">
