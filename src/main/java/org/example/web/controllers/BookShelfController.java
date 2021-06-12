@@ -3,6 +3,8 @@ package org.example.web.controllers;
 import org.apache.log4j.Logger;
 import org.example.app.services.BookService;
 import org.example.web.dto.Book;
+import org.example.web.dto.BookFieldsToRemove;
+import org.example.web.dto.BookFilter;
 import org.example.web.dto.BookIdToRemove;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -16,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.List;
 
 @Controller
@@ -39,6 +38,8 @@ public class BookShelfController {
         logger.info("GET /shelf returns book_shelf.html");
         model.addAttribute("book", new Book());
         model.addAttribute("bookIdToRemove", new BookIdToRemove());
+        model.addAttribute("bookFieldsToRemove", new BookFieldsToRemove());
+        model.addAttribute("bookFilter", new BookFilter());
         model.addAttribute("bookList", bookService.getAllBooks());
         return "book_shelf";
     }
@@ -60,6 +61,7 @@ public class BookShelfController {
     public String removeBook(@Valid BookIdToRemove bookIdToRemove, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("book", new Book());
+            model.addAttribute("bookFieldsToRemove", new BookFieldsToRemove());
             model.addAttribute("bookList", bookService.getAllBooks());
             return "book_shelf";
         }
@@ -68,54 +70,45 @@ public class BookShelfController {
     }
 
     @PostMapping("/remove/all")
-    public String removeBooksAll(
-            @RequestParam(value = "bookAuthorToRemove") String bookAuthorToRemove,
-            @RequestParam(value = "bookTitleToRemove") String bookTitleToRemove,
-            @RequestParam(value = "bookSizeToRemove") Integer bookSizeToRemove) {
-        logger.info("removeBookOther:\n" +
-                "bookAuthorToRemove: " + bookAuthorToRemove +
-                " | bookTitleToRemove: " + bookTitleToRemove +
-                " | bookSizeToRemove: " + bookSizeToRemove);
-        bookService.removeBookItems(bookAuthorToRemove, bookTitleToRemove, bookSizeToRemove);
+    public String removeBooksAll(@Valid BookFieldsToRemove book, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("book", new Book());
+            model.addAttribute("bookIdToRemove", new BookIdToRemove());
+            model.addAttribute("bookFilter", new BookFilter());
+            model.addAttribute("bookList", bookService.getAllBooks());
+            return "book_shelf";
+        }
+        logger.info("removeBooksAll:\n" +
+                book.getAuthor() + " | " +
+                book.getTitle() + " | " +
+                book.getSize());
+        bookService.removeBookItems(book);
         return "redirect:/books/shelf";
     }
 
     @PostMapping(value = "/filter")
-    public String filterBooks(
-            @RequestParam(value = "bookAuthorToFilter") String bookAuthorToFilter,
-            @RequestParam(value = "bookTitleToFilter") String bookTitleToFilter,
-            @RequestParam(value = "bookSizeToFilter") Integer bookSizeToFilter, Model model) {
-        logger.info("filterBooks:\n " +
-                "bookAuthorToFilter: " + bookAuthorToFilter +
-                " | bookTitleToFilter: " + bookTitleToFilter +
-                " | bookSizeToFilter: " + bookSizeToFilter);
-        bookService.filterBooks(bookAuthorToFilter, bookTitleToFilter, bookSizeToFilter);
+    public String filterBooks(@Valid BookFilter bookFilter, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("book", new Book());
+            model.addAttribute("bookIdToRemove", new BookIdToRemove());
+            model.addAttribute("bookFieldsToRemove", new BookFieldsToRemove());
+            model.addAttribute("bookList", bookService.getAllBooks());
+            return "book_shelf";
+        }
+        List<Book> books = bookService.filterBooks(bookFilter);
+        model.addAttribute("book", new Book());
+        model.addAttribute("bookIdToRemove", new BookIdToRemove());
+        model.addAttribute("bookFieldsToRemove", new BookFieldsToRemove());
+//        model.addAttribute("bookFilter", new BookFilter());
+        model.addAttribute("bookList", books);
+        return "book_shelf";
 
-        List<Book> filterBooks = bookService.filterBooks(bookAuthorToFilter, bookTitleToFilter, bookSizeToFilter);
-
-        model.addAttribute("bookList", filterBooks);
-        return "redirect:/books/shelf";
-//        return "book_shelf";
+//        return "redirect:/books/shelf";
     }
 
     @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
-        String name = file.getOriginalFilename();
-        byte[] bytes = file.getBytes();
-
-        if (bytes.length <= 0) //TODO remake this if
-            return "redirect:/books/shelf";
-
-        String rootPath = System.getProperty("catalina.home");
-        File dir = new File(rootPath + File.separator + "uploads");
-        if (!dir.exists())
-            dir.mkdirs();
-
-        File serverFile = new File(dir.getAbsolutePath() + File.separator + name);
-        try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(serverFile))) {
-            outputStream.write(bytes);
-        }
-        logger.info("File saved at: " + serverFile.getAbsolutePath());
+    public String uploadFile(@RequestParam("file") MultipartFile file) {
+        bookService.upload(file);
 
         return "redirect:/books/shelf";
     }

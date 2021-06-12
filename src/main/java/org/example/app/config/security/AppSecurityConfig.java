@@ -1,4 +1,4 @@
-package org.example.app.config;
+package org.example.app.config.security;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Bean;

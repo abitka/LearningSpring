@@ -36,11 +36,11 @@
             <tr>
                 <td>
                     <input type="text" placeholder="author" th:field="*{author}">
-                    <p th:if="${#fields.hasErrors('author')}">Wrong field Author| min 1 ,max 5 length</p>
+                    <p th:if="${#fields.hasErrors('author')}">Wrong field Author: min 1 & max 250 length</p>
                 </td>
                 <td>
                     <input type="text" placeholder="book_title" th:field="*{title}">
-                    <p th:if="${#fields.hasErrors('title')}">Wrong filed Title| min 1, max 5 length</p>
+                    <p th:if="${#fields.hasErrors('title')}">Wrong filed Title: min 1 & max 250 length</p>
                 </td>
                 <td>
                     <input type="text" placeholder="pages" th:field="*{size}">
@@ -69,13 +69,20 @@
         </table>
     </form>
 
-    <form method="post" th:action="@{/books/remove/all}">
+    <form method="post" th:action="@{/books/remove/all}" th:object="${bookFieldsToRemove}">
         <table>
             <tr>
                 <td>
-                    <input type="text" placeholder="author" th:name="bookAuthorToRemove">
-                    <input type="text" placeholder="title" th:name="bookTitleToRemove">
-                    <input type="text" placeholder="size" th:name="bookSizeToRemove">
+                    <input type="text" placeholder="author" th:field="*{author}">
+                    <p th:if="${#fields.hasErrors('author')}">Wrong field Author: max 250 length</p>
+                </td>
+                <td>
+                    <input type="text" placeholder="title" th:field="*{title}">
+                    <p th:if="${#fields.hasErrors('title')}">Wrong field Author: max 250 length</p>
+                </td>
+                <td>
+                    <input type="text" placeholder="size" th:field="*{size}">
+                    <p th:if="${#fields.hasErrors('size')}">Only integer value, max 5 length, not empty</p>
                 </td>
                 <td>
                     <input type="submit" value="removeAll">
@@ -84,13 +91,20 @@
         </table>
     </form>
 
-    <form method="post" th:action="@{/books/filter}">
+    <form method="post" th:action="@{/books/filter}" th:object="${bookFilter}">
         <table>
             <tr>
                 <td>
-                    <input type="text" placeholder="author" th:name="bookAuthorToFilter">
-                    <input type="text" placeholder="title" th:name="bookTitleToFilter">
-                    <input type="text" placeholder="size" th:name="bookSizeToFilter">
+                    <input type="text" placeholder="author" th:field="*{author}">
+                    <p th:if="${#fields.hasErrors('author')}">Wrong field Author: max 250 length</p>
+                </td>
+                <td>
+                    <input type="text" placeholder="title" th:field="*{title}">
+                    <p th:if="${#fields.hasErrors('title')}">Wrong field Author: max 250 length</p>
+                </td>
+                <td>
+                    <input type="text" placeholder="size" th:field="*{size}">
+                    <p th:if="${#fields.hasErrors('size')}">Only integer value, max 5 length, not empty</p>
                 </td>
                 <td>
                     <input type="submit" value="filter">

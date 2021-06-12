@@ -1,5 +1,8 @@
 package org.example.app.repositories;
 
+import org.example.web.dto.BookFieldsToRemove;
+import org.example.web.dto.BookFilter;
+
 import java.util.List;
 
 public interface BookRepository<T> {
@@ -9,7 +12,7 @@ public interface BookRepository<T> {
     void store(T object);
 
     void removeItemById(Integer idToRemove);
-    void removeItems(String bookAuthorToRemove, String bookTitleToRemove, Integer bookSizeToRemove);
+    void removeItemsByFields(BookFieldsToRemove book);
 
-    List<T> filterBooks(String author, String title, Integer size);
+    List<T> filterBooks(BookFilter book);
 }

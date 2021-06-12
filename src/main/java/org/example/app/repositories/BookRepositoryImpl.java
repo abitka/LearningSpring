@@ -2,6 +2,8 @@ package org.example.app.repositories;
 
 import org.apache.log4j.Logger;
 import org.example.web.dto.Book;
+import org.example.web.dto.BookFieldsToRemove;
+import org.example.web.dto.BookFilter;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -66,24 +68,36 @@ public class BookRepositoryImpl implements BookRepository<Book>, ApplicationCont
     }
 
     @Override
-    public void removeItems(String bookAuthorToRemove, String bookTitleToRemove, Integer bookSizeToRemove) {
-        for (Book book : retrieveAll()) {
-            if (book.getAuthor().equalsIgnoreCase(bookAuthorToRemove)) {
-//                repo.remove(book);
-            }
-            if (book.getTitle().equalsIgnoreCase(bookTitleToRemove)) {
-//                repo.remove(book);
-            }
-            if (bookSizeToRemove == null) continue;
-            if (book.getSize().equals(bookSizeToRemove)) {
-//                repo.remove(book);
-            }
-        }
+    public void removeItemsByFields(BookFieldsToRemove book) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("author", book.getAuthor());
+        parameterSource.addValue("title", book.getTitle());
+        parameterSource.addValue("size", book.getSize());
+        jdbcTemplate.update(
+                "DELETE FROM books WHERE author = :author OR title = :title OR size = :size",
+                parameterSource);
     }
 
     @Override
-    public List<Book> filterBooks(String author, String title, Integer size) {
-        return null;
+    public List<Book> filterBooks(BookFilter bookFilter) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("author", bookFilter.getAuthor());
+        parameterSource.addValue("title", bookFilter.getTitle());
+        parameterSource.addValue("size", bookFilter.getSize());
+
+        List<Book> books = jdbcTemplate.query(
+                "SELECT * FROM books WHERE author = :author OR title = :title OR size = :size",
+                parameterSource,
+                (ResultSet rs, int rowNum) -> {
+            Book book = new Book();
+            book.setId(rs.getInt("id"));
+            book.setAuthor(rs.getString("author"));
+            book.setTitle(rs.getString("title"));
+            book.setSize(rs.getInt("size"));
+            return book;
+        });
+
+        return new ArrayList<>(books);
     }
 
     @Override

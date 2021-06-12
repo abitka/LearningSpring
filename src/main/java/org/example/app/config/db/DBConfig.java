@@ -1,4 +1,4 @@
-package org.example.app.config;
+package org.example.app.config.db;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,8 @@ public class DBConfig {
                 .generateUniqueName(false)
                 .setName("book_store")
                 .setType(EmbeddedDatabaseType.H2)
-                .addDefaultScripts()
+                .addScript("classpath:schema.sql")
+                .addScript("classpath:data.sql")
                 .setScriptEncoding("UTF-8")
                 .ignoreFailedDrops(true)
                 .build();

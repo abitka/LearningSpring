@@ -1,34 +1,27 @@
 package org.example.web.dto;
 
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class Book {
-    private Integer id;
-    @Size(max = 250)
+public class BookFieldsToRemove {
+    @Size(min = 2, max = 250)
     private String author;
-    @Size(max = 250)
+
+    @Size(min = 10, max = 250)
     private String title;
 
+    @NotNull
     @Digits(integer = 5, fraction = 0)
     private Integer size;
 
-    public Book() {
+    public BookFieldsToRemove() {
     }
 
-    public Book(Integer id, String author, String title, Integer size) {
-        this.id = id;
+    public BookFieldsToRemove(String author, String title, Integer size) {
         this.author = author;
         this.title = title;
         this.size = size;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getAuthor() {
