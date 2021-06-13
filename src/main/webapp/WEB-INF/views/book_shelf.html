@@ -126,6 +126,20 @@
         </table>
     </form>
 
+    <form method="get" th:action="@{/books/download}" th:object="${uploadFiles}">
+        <table>
+            <tr>
+                <td>
+                    <input type="text" placeholder="file name" th:field="*{filename}"/>
+                    <p th:if="${#fields.hasErrors()}">Wrong: not empty, max 250 length</p>
+                </td>
+                <td>
+                    <input type="submit" value="Download"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+
     <table id="books">
         <th>id</th>
         <th>author</th>

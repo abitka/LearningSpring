@@ -2,22 +2,18 @@ package org.example.web.controllers;
 
 import org.apache.log4j.Logger;
 import org.example.app.services.BookService;
-import org.example.web.dto.Book;
-import org.example.web.dto.BookFieldsToRemove;
-import org.example.web.dto.BookFilter;
-import org.example.web.dto.BookIdToRemove;
+import org.example.web.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -40,6 +36,7 @@ public class BookShelfController {
         model.addAttribute("bookIdToRemove", new BookIdToRemove());
         model.addAttribute("bookFieldsToRemove", new BookFieldsToRemove());
         model.addAttribute("bookFilter", new BookFilter());
+        model.addAttribute("uploadFiles", new UploadFiles());
         model.addAttribute("bookList", bookService.getAllBooks());
         return "book_shelf";
     }
@@ -99,7 +96,6 @@ public class BookShelfController {
         model.addAttribute("book", new Book());
         model.addAttribute("bookIdToRemove", new BookIdToRemove());
         model.addAttribute("bookFieldsToRemove", new BookFieldsToRemove());
-//        model.addAttribute("bookFilter", new BookFilter());
         model.addAttribute("bookList", books);
         return "book_shelf";
 
@@ -111,5 +107,20 @@ public class BookShelfController {
         bookService.upload(file);
 
         return "redirect:/books/shelf";
+    }
+
+    @GetMapping("/download")
+//    @PostMapping("/download")
+    @ResponseBody
+    public void downloadFile(@Valid UploadFiles files, HttpServletResponse response) {
+        byte[] file = bookService.download(files);
+        logger.info("download file: " + file.length);
+        response.setHeader("Content-disposition", "attachment;filename=" + files.getFilename());
+        response.setContentType("application/ostet-stream");
+        try {
+            response.getOutputStream().flush();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
     }
 }

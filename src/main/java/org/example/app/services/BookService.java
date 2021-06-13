@@ -5,14 +5,12 @@ import org.example.app.repositories.BookRepository;
 import org.example.web.dto.Book;
 import org.example.web.dto.BookFieldsToRemove;
 import org.example.web.dto.BookFilter;
+import org.example.web.dto.UploadFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 @Service
@@ -47,22 +45,14 @@ public class BookService {
     }
 
     public void upload(MultipartFile file) {
-        try {
-            String name = file.getOriginalFilename();
-            byte[] bytes = file.getBytes();
+        bookRepo.upload(file);
+    }
 
-            String rootPath = System.getProperty("catalina.home");
-            File dir = new File(rootPath + File.separator + "uploads");
-            if (!dir.exists())
-                dir.mkdirs();
+    public byte[] download(UploadFiles files) {
+        return bookRepo.download(files);
+    }
 
-            File serverFile = new File(dir.getAbsolutePath() + File.separator + name);
-            try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(serverFile))) {
-                outputStream.write(bytes);
-            }
-            logger.info("File saved at: " + serverFile.getAbsolutePath());
-        } catch (IOException e) {
-            logger.error("Fail Upload file\n" + e);
-        }
+    public Path download2(UploadFiles files) {
+        return bookRepo.download2(files);
     }
 }
