@@ -5,10 +5,10 @@ import javax.validation.constraints.Size;
 
 public class BookFilter {
 
-    @Size(min = 2, max = 250)
+    @Size(max = 250)
     private String author;
 
-    @Size(min = 10, max = 250)
+    @Size(max = 250)
     private String title;
 
     @Digits(integer = 5, fraction = 0)

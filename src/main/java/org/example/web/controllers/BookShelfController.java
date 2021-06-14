@@ -101,8 +101,6 @@ public class BookShelfController {
         model.addAttribute("bookFieldsToRemove", new BookFieldsToRemove());
         model.addAttribute("bookList", books);
         return "book_shelf";
-
-//        return "redirect:/books/shelf";
     }
 
     @PostMapping("/upload")

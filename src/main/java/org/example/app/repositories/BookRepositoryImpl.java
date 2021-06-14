@@ -132,13 +132,6 @@ public class BookRepositoryImpl implements BookRepository<Book>, ApplicationCont
             logger.info("File saved at: " + serverFile.getAbsolutePath());
 
             filesList.add(new UploadFiles(name, serverFile.getAbsolutePath()));
-//            MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-//            parameterSource.addValue("filename", name);
-//            parameterSource.addValue("filename", serverFile.getAbsolutePath());
-//            jdbcTemplate.update(
-//                    "INSERT INTO upload_files (filename, filepath) " +
-//                            "VALUES(:filename, :filepath)",
-//                    parameterSource);
             logger.info("Upload file complete: " + name);
         } catch (IOException e) {
             logger.error("Fail Upload file\n" + e);
@@ -148,18 +141,6 @@ public class BookRepositoryImpl implements BookRepository<Book>, ApplicationCont
     @Override
     public Path download(String uploadFiles) {
         logger.info("download: file name->" + uploadFiles);
-
-//        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-//        parameterSource.addValue("filename", uploadFiles.getFilename());
-//        List<UploadFiles> files = jdbcTemplate.query("SELECT * FROM upload_files WHERE filename = :filename",
-//                parameterSource,
-//                (ResultSet rs, int row) -> {
-//            UploadFiles file = new UploadFiles();
-//            file.setId(rs.getInt("id"));
-//            file.setFilename(rs.getString("filename"));
-//            file.setFilepath(rs.getString("filepath"));
-//            return file;
-//        });
         for (UploadFiles f : showAllFiles()) {
             if (f.getFilename().equalsIgnoreCase(uploadFiles)) {
                 Path path = Paths.get(f.getFilepath());
