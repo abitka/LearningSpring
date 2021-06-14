@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 @Controller
@@ -37,6 +39,7 @@ public class BookShelfController {
         model.addAttribute("bookFieldsToRemove", new BookFieldsToRemove());
         model.addAttribute("bookFilter", new BookFilter());
         model.addAttribute("uploadFiles", new UploadFiles());
+        model.addAttribute("uploadList", bookService.getAllFiles());
         model.addAttribute("bookList", bookService.getAllBooks());
         return "book_shelf";
     }
@@ -110,17 +113,17 @@ public class BookShelfController {
     }
 
     @GetMapping("/download")
-//    @PostMapping("/download")
     @ResponseBody
-    public void downloadFile(@Valid UploadFiles files, HttpServletResponse response) {
-        byte[] file = bookService.download(files);
-        logger.info("download file: " + file.length);
-        response.setHeader("Content-disposition", "attachment;filename=" + files.getFilename());
+    public void downloadFile(@RequestParam("filename") String files, HttpServletResponse response) {
+        Path filepath = bookService.download(files);
+        logger.info("download file: " + filepath);
+        response.setHeader("Content-disposition", "attachment;filename=" + files);
         response.setContentType("application/ostet-stream");
         try {
+            Files.copy(filepath, response.getOutputStream());
             response.getOutputStream().flush();
         } catch (IOException ioException) {
-            ioException.printStackTrace();
+            logger.error("Download file failed!" + ioException);
         }
     }
 }

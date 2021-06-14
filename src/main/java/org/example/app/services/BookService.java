@@ -28,6 +28,10 @@ public class BookService {
         return bookRepo.retrieveAll();
     }
 
+    public List<UploadFiles> getAllFiles() {
+        return bookRepo.showAllFiles();
+    }
+
     public void saveBook(Book book) {
         bookRepo.store(book);
     }
@@ -48,11 +52,7 @@ public class BookService {
         bookRepo.upload(file);
     }
 
-    public byte[] download(UploadFiles files) {
+    public Path download(String files) {
         return bookRepo.download(files);
-    }
-
-    public Path download2(UploadFiles files) {
-        return bookRepo.download2(files);
     }
 }

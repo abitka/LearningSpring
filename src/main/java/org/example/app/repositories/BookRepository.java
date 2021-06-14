@@ -13,7 +13,7 @@ public interface BookRepository<T> {
     List<T> retrieveAll();
     List<T> filterBooks(BookFilter book);
 
-    List<T> showAllFiles();
+    List<UploadFiles> showAllFiles();
 
     void store(T object);
 
@@ -21,7 +21,5 @@ public interface BookRepository<T> {
     void removeItemsByFields(BookFieldsToRemove book);
 
     void upload(MultipartFile file);
-    byte[] download(UploadFiles files);
-
-    Path download2(UploadFiles file);
+    Path download(String files);
 }

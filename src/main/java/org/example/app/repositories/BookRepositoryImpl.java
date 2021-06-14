@@ -18,7 +18,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.ResultSet;
@@ -30,7 +29,7 @@ public class BookRepositoryImpl implements BookRepository<Book>, ApplicationCont
 
     private final Logger logger = Logger.getLogger(BookRepositoryImpl.class);
     private ApplicationContext context;
-    private final List<UploadFiles> uploadFiles = new ArrayList<>();
+    private final List<UploadFiles> filesList = new ArrayList<>();
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -111,8 +110,8 @@ public class BookRepositoryImpl implements BookRepository<Book>, ApplicationCont
     }
 
     @Override
-    public List<Book> showAllFiles() {
-        return null;
+    public List<UploadFiles> showAllFiles() {
+        return new ArrayList<>(filesList);
     }
 
     @Override
@@ -132,34 +131,43 @@ public class BookRepositoryImpl implements BookRepository<Book>, ApplicationCont
             }
             logger.info("File saved at: " + serverFile.getAbsolutePath());
 
-            uploadFiles.add(new UploadFiles(serverFile.getAbsolutePath()));
-            logger.info("upload: " + uploadFiles.size());
-            logger.info("upload: " + uploadFiles.get(0).getFilename());
+            filesList.add(new UploadFiles(name, serverFile.getAbsolutePath()));
+//            MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+//            parameterSource.addValue("filename", name);
+//            parameterSource.addValue("filename", serverFile.getAbsolutePath());
+//            jdbcTemplate.update(
+//                    "INSERT INTO upload_files (filename, filepath) " +
+//                            "VALUES(:filename, :filepath)",
+//                    parameterSource);
+            logger.info("Upload file complete: " + name);
         } catch (IOException e) {
             logger.error("Fail Upload file\n" + e);
         }
     }
 
     @Override
-    public byte[] download(UploadFiles files) {
-        try {
-            logger.info("download: file name->" + files.getFilename());
-            for (UploadFiles file : uploadFiles) {
-                logger.info(file.getFilename());
+    public Path download(String uploadFiles) {
+        logger.info("download: file name->" + uploadFiles);
+
+//        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+//        parameterSource.addValue("filename", uploadFiles.getFilename());
+//        List<UploadFiles> files = jdbcTemplate.query("SELECT * FROM upload_files WHERE filename = :filename",
+//                parameterSource,
+//                (ResultSet rs, int row) -> {
+//            UploadFiles file = new UploadFiles();
+//            file.setId(rs.getInt("id"));
+//            file.setFilename(rs.getString("filename"));
+//            file.setFilepath(rs.getString("filepath"));
+//            return file;
+//        });
+        for (UploadFiles f : showAllFiles()) {
+            if (f.getFilename().equalsIgnoreCase(uploadFiles)) {
+                Path path = Paths.get(f.getFilepath());
+                logger.info("download: path->" + path);
+                return path;
             }
-            int index = uploadFiles.indexOf(files);
-            logger.info("download: index->" + index);
-            Path path = Paths.get(uploadFiles.get(0).getFilename());
-            logger.info("download: path->" + path);
-            return Files.readAllBytes(path);
-        } catch (IOException e) {
-            logger.error("Fail Download file\n" + e);
         }
         return null;
-    }
-
-    public Path download2(UploadFiles file) {
-        return Paths.get(uploadFiles.get(0).getFilename());
     }
 
     @Override

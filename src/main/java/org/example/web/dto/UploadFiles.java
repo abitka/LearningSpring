@@ -10,12 +10,16 @@ public class UploadFiles {
     @NotEmpty
     @Size(max = 250)
     private String filename;
+    @NotNull
+    @NotEmpty
+    private String filepath;
 
     public UploadFiles() {
     }
 
-    public UploadFiles(String fileName) {
-        this.filename = fileName;
+    public UploadFiles(String filename, String filepath) {
+        this.filename = filename;
+        this.filepath = filepath;
     }
 
     public String getFilename() {
@@ -24,5 +28,13 @@ public class UploadFiles {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public String getFilepath() {
+        return filepath;
+    }
+
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
     }
 }
