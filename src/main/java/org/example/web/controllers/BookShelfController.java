@@ -113,12 +113,7 @@ public class BookShelfController {
 
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file) {
-        try {
-            logger.info(">>>>>>> UPLOAD ERROR!!!");
-            bookService.upload(file);
-        } catch (MultipartException e) {
-            logger.info(">>>>>>> UPLOAD ERROR!!!");
-        }
+        bookService.upload(file);
 
         return "redirect:/books/shelf";
     }
