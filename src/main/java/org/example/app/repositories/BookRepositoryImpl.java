@@ -54,6 +54,9 @@ public class BookRepositoryImpl implements BookRepository<Book>, ApplicationCont
 
     @Override
     public void store(Book book) {
+        if (book.getAuthor().isEmpty() && book.getTitle().isEmpty() && book.getSize() == null)
+            return;
+
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("author", book.getAuthor());
         parameterSource.addValue("title", book.getTitle());
@@ -89,6 +92,9 @@ public class BookRepositoryImpl implements BookRepository<Book>, ApplicationCont
 
     @Override
     public List<Book> filterBooks(BookFilter bookFilter) {
+        if (bookFilter.getAuthor().isEmpty() && bookFilter.getTitle().isEmpty() && bookFilter.getSize() == null)
+            return retrieveAll();
+
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("author", bookFilter.getAuthor());
         parameterSource.addValue("title", bookFilter.getTitle());

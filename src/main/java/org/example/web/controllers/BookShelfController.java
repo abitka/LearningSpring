@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -49,6 +50,10 @@ public class BookShelfController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("book", book);
             model.addAttribute("bookIdToRemove", new BookIdToRemove());
+            model.addAttribute("bookFieldsToRemove", new BookFieldsToRemove());
+            model.addAttribute("bookFilter", new BookFilter());
+            model.addAttribute("uploadFiles", new UploadFiles());
+            model.addAttribute("uploadList", bookService.getAllFiles());
             model.addAttribute("bookList", bookService.getAllBooks());
             return "book_shelf";
         }
@@ -62,6 +67,9 @@ public class BookShelfController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("book", new Book());
             model.addAttribute("bookFieldsToRemove", new BookFieldsToRemove());
+            model.addAttribute("bookFilter", new BookFilter());
+            model.addAttribute("uploadFiles", new UploadFiles());
+            model.addAttribute("uploadList", bookService.getAllFiles());
             model.addAttribute("bookList", bookService.getAllBooks());
             return "book_shelf";
         }
@@ -105,7 +113,12 @@ public class BookShelfController {
 
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file) {
-        bookService.upload(file);
+        try {
+            logger.info(">>>>>>> UPLOAD ERROR!!!");
+            bookService.upload(file);
+        } catch (MultipartException e) {
+            logger.info(">>>>>>> UPLOAD ERROR!!!");
+        }
 
         return "redirect:/books/shelf";
     }
